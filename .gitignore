@@ -47,5 +47,6 @@ _deps
 *.exe
 *.out
 *.app
+vface_server_cpp
 
 # End of https://www.toptal.com/developers/gitignore/api/c++
