@@ -1,3 +1,5 @@
+#include <iostream>
+#include <chrono>
 #include <dlib/opencv.h>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
@@ -6,9 +8,12 @@
 
 using namespace dlib;
 using namespace std;
+using namespace std::chrono;
 
 int main()
 {
+    cout.setf(std::ios::unitbuf);
+
     try
     {
         cv::Mat frame;
@@ -18,6 +23,9 @@ int main()
             cerr << "Unable to connect to camera" << endl;
             return 1;
         }
+        // Resize to appropriate size to speed up
+        cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
+        cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
 
         frontal_face_detector detector = get_frontal_face_detector();
         shape_predictor pose_model;
@@ -27,6 +35,7 @@ int main()
         {
             cap >> frame;
 
+            //auto start = high_resolution_clock::now();
             // Detect face as well as landmarks
             cv_image<bgr_pixel> cimg(frame);
             std::vector<rectangle> faces = detector(cimg);
@@ -38,9 +47,18 @@ int main()
                 {
                     cv::circle(frame, cv::Point(shapes[0].part(i).x(), shapes[0].part(i).y()), 2, cv::Scalar(255, 255, 0), -1);
                 }
+
+                cout << shapes[0].part(0).x();
+                cout << " " << shapes[0].part(0).y();
+                cout << " " << shapes[0].part(67).x();
+                cout << " " << shapes[0].part(67).y() << endl;
             }
+            //auto stop = high_resolution_clock::now();
+
+            //auto duration = duration_cast<microseconds>(stop - start);
 
             cv::imshow("vface_server_cpp", frame);
+            //cout << duration.count() << " microseconds" << endl;
 
             if(cv::waitKey(1) == 27)
             {
