@@ -48,10 +48,13 @@ int main()
                     cv::circle(frame, cv::Point(shapes[0].part(i).x(), shapes[0].part(i).y()), 2, cv::Scalar(255, 255, 0), -1);
                 }
 
-                cout << shapes[0].part(0).x();
-                cout << " " << shapes[0].part(0).y();
-                cout << " " << shapes[0].part(67).x();
-                cout << " " << shapes[0].part(67).y() << endl;
+                if(!shapes.empty())
+                {
+                    cout << shapes[0].part(0).x();
+                    cout << " " << shapes[0].part(0).y();
+                    cout << " " << shapes[0].part(67).x();
+                    cout << " " << shapes[0].part(67).y() << endl;
+                }
             }
             //auto stop = high_resolution_clock::now();
 
