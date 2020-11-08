@@ -43,24 +43,33 @@ int main()
             if(!faces.empty())
             {
                 shapes.push_back(pose_model(cimg, faces[0]));
-                for(int i = 0; i < 68; i++)
+                /*for(int i = 0; i < 68; i++)
                 {
                     cv::circle(frame, cv::Point(shapes[0].part(i).x(), shapes[0].part(i).y()), 2, cv::Scalar(255, 255, 0), -1);
-                }
+                }*/
 
-                if(!shapes.empty())
+                int leftEyePoints[] = {36, 37, 38, 39, 40, 41};
+                int rightEyePoints[] = {42, 43, 44, 45, 46, 47};
+                std::vector<cv::Point> leftEyeRegion;
+                std::vector<std::vector<cv::Point>> temp;
+                for(int i : leftEyePoints) leftEyeRegion.push_back(cv::Point(shapes[0].part(i).x(), shapes[0].part(i).y()));
+                temp.push_back(leftEyeRegion);
+                cv::Mat blackFrame = cv::Mat(frame.size(), CV_8UC1, cv::Scalar(0));
+                cv::Mat mask = cv::Mat(frame.size(), CV_8UC1, cv::Scalar(255));
+                cv::fillPoly(mask, temp, cv::Scalar(0, 0, 0));
+                cv::Mat leftEye;
+                cv::bitwise_not(blackFrame, leftEye, mask=mask);
+                for(int i = 0; i < 68; i++)
                 {
-                    cout << shapes[0].part(0).x();
-                    cout << " " << shapes[0].part(0).y();
-                    cout << " " << shapes[0].part(67).x();
-                    cout << " " << shapes[0].part(67).y() << endl;
+                    cv::circle(leftEye, cv::Point(shapes[0].part(i).x(), shapes[0].part(i).y()), 2, cv::Scalar(127), -1);
                 }
+                cv::imshow("left eye", leftEye);
             }
             //auto stop = high_resolution_clock::now();
 
             //auto duration = duration_cast<microseconds>(stop - start);
 
-            cv::imshow("vface_server_cpp", frame);
+            //cv::imshow("vface_server_cpp", frame);
             //cout << duration.count() << " microseconds" << endl;
 
             if(cv::waitKey(1) == 27)
