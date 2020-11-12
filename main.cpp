@@ -46,26 +46,27 @@ int main()
             if(!faces.empty())
             {
                 shapes.push_back(pose_model(cimg, faces[0]));
-                /*for(int i = 0; i < 68; i++)
-                {
-                    cv::circle(frame, cv::Point(shapes[0].part(i).x(), shapes[0].part(i).y()), 2, cv::Scalar(255, 255, 0), -1);
-                }*/
 
-                Eye eye = Eye();
-                cv::Mat leftEye = eye.analyze(frame, shapes, 0);
-                cv::Mat rightEye = eye.analyze(frame, shapes, 1);
+                Eye l = Eye();
+                Eye r = Eye();
+                cv::Mat leftEye = l.analyze(frame, shapes, 0);
+                cv::Mat rightEye = r.analyze(frame, shapes, 1);
                 cv::bitwise_and(leftEye, rightEye, leftEye, cv::Mat(frame.size(), CV_8UC1, cv::Scalar(255)));
+
+                cv::Rect leftRect(l.xmin, l.ymin, l.xmax - l.xmin, l.ymax - l.ymin);
+                cv::Rect rightRect(r.xmin, r.ymin, r.xmax - r.xmin, r.ymax - r.ymin);
+                cv::rectangle(leftEye, leftRect, cv::Scalar(127));
+                cv::rectangle(leftEye, rightRect, cv::Scalar(127));
                 for(int i = 0; i < 68; i++)
                 {
                     cv::circle(leftEye, cv::Point(shapes[0].part(i).x(), shapes[0].part(i).y()), 2, cv::Scalar(127), -1);
                 }
-                cv::imshow("left eye", leftEye);
+                cv::imshow("detections", leftEye);
             }
             auto stop = high_resolution_clock::now();
 
             auto duration = duration_cast<microseconds>(stop - start);
 
-            //cv::imshow("vface_server_cpp", frame);
             cout << duration.count() << " microseconds" << endl;
 
             if(cv::waitKey(1) == 27)

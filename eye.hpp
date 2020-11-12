@@ -10,6 +10,8 @@
 class Eye
 {
 public:
+    int xmin, xmax, ymin, ymax;
+
     Eye() {}
 
     cv::Mat analyze(cv::Mat &frame, std::vector<dlib::full_object_detection> &shapes, int side)
@@ -39,10 +41,11 @@ public:
         cv::Mat eyeFrame;
         cv::bitwise_not(blackFrame, eyeFrame, mask=mask);
 
-        /*for(int i = 0; i < 68; i++)
-        {
-            cv::circle(eyeFrame, cv::Point(shapes[0].part(i).x(), shapes[0].part(i).y()), 2, cv::Scalar(127), -1);
-        }*/
+        // Crop the eye region
+        xmin = (*min_element(eyeRegion.begin(), eyeRegion.end(), [](cv::Point i, cv::Point j) { return i.x < j.x; })).x - margin;
+        xmax = (*max_element(eyeRegion.begin(), eyeRegion.end(), [](cv::Point i, cv::Point j) { return i.x < j.x; })).x + margin;
+        ymin = (*min_element(eyeRegion.begin(), eyeRegion.end(), [](cv::Point i, cv::Point j) { return i.y < j.y; })).y - margin;
+        ymax = (*max_element(eyeRegion.begin(), eyeRegion.end(), [](cv::Point i, cv::Point j) { return i.y < j.y; })).y + margin;
 
         return eyeFrame;
     }
@@ -50,6 +53,7 @@ public:
 private:
     const int leftEyePoints[6] = {36, 37, 38, 39, 40, 41};
     const int rightEyePoints[6] = {42, 43, 44, 45, 46, 47};
+    const int margin = 5;
 };
 
 #endif
