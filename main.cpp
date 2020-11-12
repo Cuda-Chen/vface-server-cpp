@@ -40,7 +40,8 @@ int main()
 
             auto start = high_resolution_clock::now();
             // Detect face as well as landmarks
-            cv_image<bgr_pixel> cimg(frame);
+            cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
+            cv_image<unsigned char> cimg(frame);
             std::vector<rectangle> faces = detector(cimg);
             std::vector<full_object_detection> shapes;
             if(!faces.empty())
