@@ -11,6 +11,7 @@ class Eye
 {
 public:
     int xmin, xmax, ymin, ymax;
+    int xcenter, ycenter;
 
     Eye() {}
 
@@ -46,6 +47,9 @@ public:
         xmax = (*max_element(eyeRegion.begin(), eyeRegion.end(), [](cv::Point i, cv::Point j) { return i.x < j.x; })).x + margin;
         ymin = (*min_element(eyeRegion.begin(), eyeRegion.end(), [](cv::Point i, cv::Point j) { return i.y < j.y; })).y - margin;
         ymax = (*max_element(eyeRegion.begin(), eyeRegion.end(), [](cv::Point i, cv::Point j) { return i.y < j.y; })).y + margin;
+
+        xcenter = xmin + (xmax - xmin) / 2;
+        ycenter = ymin + (ymax - ymin) / 2;
 
         return eyeFrame;
     }

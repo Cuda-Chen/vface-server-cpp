@@ -21,6 +21,7 @@ int main()
     {
         cv::Mat frame;
         cv::VideoCapture cap("test.mp4"); // use test video for testing
+        //cv::VideoCapture cap(0);
         if(!cap.isOpened())
         {
             cerr << "Unable to connect to camera" << endl;
@@ -66,12 +67,17 @@ int main()
                 cv::Mat leftEye = cv::Mat(frame.size(), CV_8UC1, cv::Scalar(255));
                 //cv::bitwise_and(leftEye, rightEye, leftEye, cv::Mat(frame.size(), CV_8UC1, cv::Scalar(255)));
 
+                //for(int idx = 0; idx >= 0; idx = lPupil.hierarchy[idx][1])
+                    //cv::drawContours(leftEye, lPupil.contours, idx, cv::Scalar(127), 1, 8, lPupil.hierarchy);
                 cv::rectangle(leftEye, leftRect, cv::Scalar(127));
                 cv::rectangle(leftEye, rightRect, cv::Scalar(127));
+                cv::circle(leftEye, cv::Point(l.xcenter, l.ycenter), 2, cv::Scalar(0), -1);
+                cv::circle(leftEye, cv::Point(r.xcenter, r.ycenter), 2, cv::Scalar(0), -1);
                 for(int i = 0; i < 68; i++)
                 {
                     cv::circle(leftEye, cv::Point(shapes[0].part(i).x(), shapes[0].part(i).y()), 2, cv::Scalar(127), -1);
                 }
+                //cout << lPupil.x << " " << lPupil.y;
                 cv::imshow("detections", leftEye);
             }
             auto stop = high_resolution_clock::now();
