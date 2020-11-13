@@ -7,6 +7,7 @@
 #include <dlib/image_processing.h>
 
 #include "eye.hpp"
+#include "pupil.hpp"
 
 using namespace dlib;
 using namespace std;
@@ -48,14 +49,23 @@ int main()
             {
                 shapes.push_back(pose_model(cimg, faces[0]));
 
+                // eye
                 Eye l = Eye();
                 Eye r = Eye();
-                cv::Mat leftEye = l.analyze(frame, shapes, 0);
-                cv::Mat rightEye = r.analyze(frame, shapes, 1);
-                cv::bitwise_and(leftEye, rightEye, leftEye, cv::Mat(frame.size(), CV_8UC1, cv::Scalar(255)));
-
+                cv::Mat leftTemp = l.analyze(frame, shapes, 0);
+                cv::Mat rightTemp = r.analyze(frame, shapes, 1);
                 cv::Rect leftRect(l.xmin, l.ymin, l.xmax - l.xmin, l.ymax - l.ymin);
                 cv::Rect rightRect(r.xmin, r.ymin, r.xmax - r.xmin, r.ymax - r.ymin);
+
+                // pupil
+                Pupil lPupil = Pupil(50);
+                Pupil rPupil = Pupil(50);
+                lPupil.findPupil(cv::Mat(frame, leftRect));
+                rPupil.findPupil(cv::Mat(frame, rightRect));
+
+                cv::Mat leftEye = cv::Mat(frame.size(), CV_8UC1, cv::Scalar(255));
+                //cv::bitwise_and(leftEye, rightEye, leftEye, cv::Mat(frame.size(), CV_8UC1, cv::Scalar(255)));
+
                 cv::rectangle(leftEye, leftRect, cv::Scalar(127));
                 cv::rectangle(leftEye, rightRect, cv::Scalar(127));
                 for(int i = 0; i < 68; i++)
