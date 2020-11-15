@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.14)
 project(vface_server_cpp)
 set(EXECUTABLE_OUTPUT_PATH "..")
 
-# force C++11
-set(CMAKE_CXX_STANDARD 11) 
+# force C++14
+set(CMAKE_CXX_STANDARD 14) 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Fetch dlib

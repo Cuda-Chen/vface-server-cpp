@@ -7,6 +7,8 @@
 #include <opencv2/imgproc.hpp>
 #include <dlib/image_processing/full_object_detection.h>
 
+#include "calibration.hpp"
+
 class Eye
 {
 public:

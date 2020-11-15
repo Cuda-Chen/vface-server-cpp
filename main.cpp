@@ -61,7 +61,8 @@ int main()
                 // pupil
                 Pupil lPupil = Pupil(50);
                 Pupil rPupil = Pupil(50);
-                lPupil.findPupil(cv::Mat(frame, leftRect));
+                cv::Mat leftEye = lPupil.preprocess(cv::Mat(frame, leftRect), 100);
+                /*lPupil.findPupil(cv::Mat(frame, leftRect));
                 rPupil.findPupil(cv::Mat(frame, rightRect));
 
                 cv::Mat leftEye = cv::Mat(frame.size(), CV_8UC1, cv::Scalar(255));
@@ -76,7 +77,7 @@ int main()
                 for(int i = 0; i < 68; i++)
                 {
                     cv::circle(leftEye, cv::Point(shapes[0].part(i).x(), shapes[0].part(i).y()), 2, cv::Scalar(127), -1);
-                }
+                }*/
                 //cout << lPupil.x << " " << lPupil.y;
                 cv::imshow("detections", leftEye);
             }
