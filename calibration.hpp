@@ -10,13 +10,16 @@
 #include <opencv2/core/types.hpp>
 
 #include "preprocessing.hpp"
+#include <iostream>
+using std::cout;
+using std::endl;
 
 class Calibration
 {
 public:
     Calibration() {}
 
-    inline bool isComplete()
+    bool isComplete()
     {
         return leftThreshold.size() >= numFrames && rightThreshold.size() >= numFrames;
     }
@@ -31,11 +34,13 @@ public:
         {
             return std::accumulate(rightThreshold.begin(), rightThreshold.end(), 0) / rightThreshold.size();
         }
+        return 0;
     }
 
     int getIrisSize(cv::Mat frame)
     {
-        cv::Rect roi(5, 5, frame.rows - 5, frame.cols - 5);
+        cv::Rect roi(5, 5, frame.cols - 5, frame.rows - 5);
+        cout << frame.size() << endl;
         cv::Mat eyeFrame = cv::Mat(frame, roi);
         int numPixels = eyeFrame.total();
         int numBlackPixels = numPixels - cv::countNonZero(eyeFrame);

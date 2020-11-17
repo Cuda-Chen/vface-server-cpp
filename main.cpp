@@ -20,8 +20,8 @@ int main()
     try
     {
         cv::Mat frame;
-        //cv::VideoCapture cap("test.mp4"); // use test video for testing
-        cv::VideoCapture cap(0);
+        cv::VideoCapture cap("test.mp4"); // use test video for testing
+        //cv::VideoCapture cap(0);
         if(!cap.isOpened())
         {
             cerr << "Unable to connect to camera" << endl;
@@ -51,6 +51,7 @@ int main()
                 shapes.push_back(pose_model(cimg, faces[0]));
 
                 // eye
+                cout << "eye" << endl;
                 Eye l = Eye();
                 Eye r = Eye();
                 cv::Mat leftTemp = l.analyze(frame, shapes, 0);
@@ -59,8 +60,9 @@ int main()
                 cv::Rect rightRect(r.xmin, r.ymin, r.xmax - r.xmin, r.ymax - r.ymin);
 
                 // pupil
-                /*Pupil lPupil = Pupil(50);
-                Pupil rPupil = Pupil(50);
+                cout << "pupil" << endl;
+                Pupil lPupil = Pupil(50);
+                /*Pupil rPupil = Pupil(50);
                 //cv::Mat leftEye = lPupil.preprocess(cv::Mat(frame, leftRect), 100);
                 lPupil.findPupil(cv::Mat(frame, leftRect));
                 rPupil.findPupil(cv::Mat(frame, rightRect));
@@ -80,6 +82,7 @@ int main()
                 }
                 //cout << lPupil.x << " " << lPupil.y;*/
                 cv::Mat leftEye = cv::Mat(frame, leftRect);
+                leftEye = lPupil.findPupilFake(leftEye);
                 cv::imshow("detections", leftEye);
             }
             auto stop = high_resolution_clock::now();

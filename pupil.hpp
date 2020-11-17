@@ -9,6 +9,7 @@
 #include <opencv2/imgproc.hpp>
 
 #include "preprocessing.hpp"
+#include "calibration.hpp"
 
 class Pupil
 {
@@ -29,6 +30,19 @@ public:
         cv::erode(result, result, this->kernel, cv::Point(-1, -1), 3);
         cv::threshold(result, result, threshold, 255, cv::THRESH_BINARY);
 
+        return result;
+    }
+
+    cv::Mat findPupilFake(cv::Mat eyeFrame)
+    {
+        Calibration calibration;
+        if(!calibration.isComplete())
+        {
+            calibration.evaluate(eyeFrame, 0);
+        }
+        int threshold = calibration.getThreshold(0);
+        cout << "the best threshold is: " << threshold << endl;
+        cv::Mat result = preprocess(eyeFrame, threshold);
         return result;
     }
 
