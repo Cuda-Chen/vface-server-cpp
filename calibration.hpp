@@ -38,7 +38,7 @@ public:
         cv::Rect roi(5, 5, frame.rows - 5, frame.cols - 5);
         cv::Mat eyeFrame = cv::Mat(frame, roi);
         int numPixels = eyeFrame.total();
-        int numBlackPixels = cv::countNonZero(eyeFrame);
+        int numBlackPixels = numPixels - cv::countNonZero(eyeFrame);
         return numBlackPixels / numPixels;
     }
 
@@ -58,6 +58,20 @@ public:
                              );
         int bestThreshold = it->first;
         return bestThreshold;
+    }
+
+    void evaluate(cv::Mat eyeFrame, int side)
+    {
+        int threshold = getBestThreshold(eyeFrame);
+
+        if(side == 0)
+        {
+            leftThreshold.push_back(threshold);
+        }
+        else if(side == 1)
+        {
+            rightThreshold.push_back(threshold);
+        }
     }
 private:
     const int numFrames = 20;
