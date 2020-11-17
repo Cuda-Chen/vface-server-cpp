@@ -4,12 +4,16 @@
 #include <vector>
 #include <algorithm>
 #include <exception>
+#include <stdexcept>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgproc.hpp>
 
 #include "preprocessing.hpp"
 #include "calibration.hpp"
+#include <iostream>
+using std::cout;
+using std::endl;
 
 class Pupil
 {
@@ -41,7 +45,6 @@ public:
             calibration.evaluate(eyeFrame, 0);
         }
         int threshold = calibration.getThreshold(0);
-        cout << "the best threshold is: " << threshold << endl;
         cv::Mat result = preprocess(eyeFrame, threshold);
         return result;
     }
@@ -49,23 +52,31 @@ public:
     void findPupil(cv::Mat eyeFrame)
     {
         //cv::Mat pupilFrame = this->preprocess(eyeFrame, threshold);
-        try
-        {
         cv::Mat pupilFrame = preprocess(eyeFrame, threshold);
 
         cv::findContours(pupilFrame, this->contours, this->hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_NONE);
-        std::cout << contours.size() << " ";
+        //std::cout << contours.size() << " ";
         std::sort(contours.begin(), contours.end(),
                   [](const std::vector<cv::Point> &a, const std::vector<cv::Point> &b)
                   { return cv::contourArea(a) < cv::contourArea(b); }); // <-- (-2)
 
-        //try
-        //{
-            cv::Moments moments = cv::moments(contours[contours.size() - 2]);
+        try
+        {
+            cout << "zergling ";
+            std::vector<cv::Point> contour = contours[contours.size() - 2];
+            cv::Moments moments = cv::moments(contour);
             this->x = moments.m10 / moments.m00;
             this->y = moments.m01 / moments.m00;
         }
-        catch (std::exception &e)
+        catch(std::out_of_range &oor)
+        {
+            std::cerr << "out of range" << std::endl;
+        }
+        catch(std::overflow_error &oe)
+        {
+            std::cerr << "divided by zero" << std::endl;
+        } 
+        catch(std::exception &e)
         {
             std::cerr << e.what() << std::endl;
         }
