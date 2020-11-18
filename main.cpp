@@ -72,13 +72,14 @@ int main()
                     //cv::drawContours(leftEye, lPupil.contours, idx, cv::Scalar(127), 1, 8, lPupil.hierarchy);
                 cv::rectangle(leftEye, leftRect, cv::Scalar(127));
                 cv::rectangle(leftEye, rightRect, cv::Scalar(127));
-                cv::circle(leftEye, cv::Point(l.xcenter, l.ycenter), 2, cv::Scalar(0), -1);
-                cv::circle(leftEye, cv::Point(r.xcenter, r.ycenter), 2, cv::Scalar(0), -1);
+                //cv::circle(leftEye, cv::Point(l.xcenter, l.ycenter), 2, cv::Scalar(0), -1);
+                //cv::circle(leftEye, cv::Point(r.xcenter, r.ycenter), 2, cv::Scalar(0), -1);
                 for(int i = 0; i < 68; i++)
                 {
                     cv::circle(leftEye, cv::Point(shapes[0].part(i).x(), shapes[0].part(i).y()), 2, cv::Scalar(127), -1);
                 }
-                //cout << lPupil.x << " " << lPupil.y;
+                if(lPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(l.xmin + lPupil.x, l.ymin + lPupil.y), 2, cv::Scalar(0), -1);
+                if(rPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(r.xmin + rPupil.x, r.ymin + rPupil.y), 2, cv::Scalar(0), -1);
                 //cv::Mat leftEye = cv::Mat(frame, leftRect);
                 //leftEye = lPupil.findPupilFake(leftEye);
                 cv::imshow("detections", leftEye);

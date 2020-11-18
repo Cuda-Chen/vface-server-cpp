@@ -18,13 +18,19 @@ using std::endl;
 class Pupil
 {
 public:
-    int y, x;
+    int y = -1;
+    int x = -1;
     std::vector<std::vector<cv::Point>> contours;
     std::vector<cv::Vec4i> hierarchy;
 
     Pupil(int threshold) 
     {
         this->threshold = threshold;
+    }
+
+    bool pupilIsLocated()
+    {
+        return x >= 0 && y >= 0;
     }
 
     cv::Mat preprocess(cv::Mat eyeFrame, int threshold)
