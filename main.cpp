@@ -20,8 +20,8 @@ int main()
     try
     {
         cv::Mat frame;
-        //cv::VideoCapture cap("test.mp4"); // use test video for testing
-        cv::VideoCapture cap(0);
+        cv::VideoCapture cap("test.mp4"); // use test video for testing
+        //cv::VideoCapture cap(0);
         if(!cap.isOpened())
         {
             cerr << "Unable to connect to camera" << endl;
@@ -87,7 +87,7 @@ int main()
 
             auto duration = duration_cast<microseconds>(stop - start);
 
-            cout << duration.count() << " microseconds" << endl;
+            //cout << duration.count() << " microseconds" << endl;
 
             if(cv::waitKey(1) == 27)
             {
