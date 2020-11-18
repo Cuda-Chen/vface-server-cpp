@@ -33,28 +33,6 @@ public:
         return x >= 0 && y >= 0;
     }
 
-    cv::Mat preprocess(cv::Mat eyeFrame, int threshold)
-    {
-        cv::Mat result;
-        cv::bilateralFilter(eyeFrame, result, 10, 15, 15);
-        cv::erode(result, result, this->kernel, cv::Point(-1, -1), 3);
-        cv::threshold(result, result, threshold, 255, cv::THRESH_BINARY);
-
-        return result;
-    }
-
-    cv::Mat findPupilFake(cv::Mat eyeFrame)
-    {
-        Calibration calibration;
-        if(!calibration.isComplete())
-        {
-            calibration.evaluate(eyeFrame, 0);
-        }
-        int threshold = calibration.getThreshold(0);
-        cv::Mat result = preprocess(eyeFrame, threshold);
-        return result;
-    }
-
     void findPupil(cv::Mat eyeFrame)
     {
         //cv::Mat pupilFrame = this->preprocess(eyeFrame, threshold);
@@ -64,7 +42,7 @@ public:
         //std::cout << contours.size() << " ";
         std::sort(contours.begin(), contours.end(),
                   [](const std::vector<cv::Point> &a, const std::vector<cv::Point> &b)
-                  { return cv::contourArea(a) < cv::contourArea(b); }); // <-- (-2)
+                  { return cv::contourArea(a, false) < cv::contourArea(b, false); }); // <-- (-2)
 
         try
         {
