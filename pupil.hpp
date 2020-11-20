@@ -73,7 +73,10 @@ public:
     
 private:
     int threshold = 50;
-    cv::Mat kernel = cv::Mat::ones(3, 3, CV_8UC1);
+    int erosionSize = 1;
+    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, 
+                                               cv::Size(2 * erosionSize + 1, 2 * erosionSize + 1),
+                                               cv::Point(erosionSize, erosionSize));
 };
 
 #endif

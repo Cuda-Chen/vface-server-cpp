@@ -34,12 +34,12 @@ public:
         return 0;
     }
 
-    int getIrisSize(cv::Mat frame)
+    double getIrisSize(cv::Mat frame)
     {
         cv::Rect roi(5, 5, frame.cols - 5, frame.rows - 5);
         cv::Mat eyeFrame = cv::Mat(frame, roi);
-        int numPixels = eyeFrame.total();
-        int numBlackPixels = numPixels - cv::countNonZero(eyeFrame);
+        double numPixels = eyeFrame.total();
+        double numBlackPixels = numPixels - cv::countNonZero(eyeFrame);
         return numBlackPixels / numPixels;
     }
 
@@ -54,7 +54,7 @@ public:
         }
 
         auto it = min_element(thresholdCandidates.begin(), thresholdCandidates.end(),
-                              [this](const auto &a, const auto &b)
+                              [this](const auto &a, const auto &b) -> bool
                               { return std::abs(a.second - averageIrisSize) < std::abs(b.second - averageIrisSize); }
                              );
         int bestThreshold = it->first;

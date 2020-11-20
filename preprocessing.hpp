@@ -6,7 +6,11 @@
 
 cv::Mat preprocess(cv::Mat eyeFrame, int threshold)
 {   
-    cv::Mat kernel = cv::Mat::ones(3, 3, CV_8UC1);
+    int erosionSize = 1;
+    //cv::Mat kernel = cv::Mat::ones(3, 3, CV_8UC1);
+    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, 
+                                               cv::Size(2 * erosionSize + 1, 2 * erosionSize + 1), 
+                                               cv::Point(erosionSize, erosionSize));
     cv::Mat result;
     cv::bilateralFilter(eyeFrame, result, 10, 15, 15);
     cv::erode(result, result, kernel, cv::Point(-1, -1), 3); 
