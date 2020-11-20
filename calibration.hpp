@@ -43,7 +43,7 @@ public:
         return numBlackPixels / numPixels;
     }
 
-    int getBestThreshold(cv::Mat eyeFrame)
+    int tryBestThreshold(cv::Mat eyeFrame)
     {
         std::unordered_map<int, double> thresholdCandidates;
 
@@ -63,7 +63,7 @@ public:
 
     void evaluate(cv::Mat eyeFrame, int side)
     {
-        int threshold = getBestThreshold(eyeFrame);
+        int threshold = tryBestThreshold(eyeFrame);
 
         if(side == 0)
         {

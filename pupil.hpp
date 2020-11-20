@@ -36,13 +36,13 @@ public:
     void findPupil(cv::Mat eyeFrame)
     {
         //cv::Mat pupilFrame = this->preprocess(eyeFrame, threshold);
-        cv::Mat pupilFrame = preprocess(eyeFrame, threshold);
+        cv::Mat pupilFrame = preprocess(eyeFrame, this->threshold);
 
         cv::findContours(pupilFrame, this->contours, this->hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_NONE);
         //std::cout << contours.size() << " ";
         std::sort(contours.begin(), contours.end(),
                   [](const std::vector<cv::Point> &a, const std::vector<cv::Point> &b)
-                  { return cv::contourArea(a, false) < cv::contourArea(b, false); }); // <-- (-2)
+                  { return cv::contourArea(a, false) < cv::contourArea(b, false); }); 
 
         try
         {

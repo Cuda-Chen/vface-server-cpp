@@ -58,9 +58,18 @@ int main()
                 cv::Rect leftRect(l.xmin, l.ymin, l.xmax - l.xmin, l.ymax - l.ymin);
                 cv::Rect rightRect(r.xmin, r.ymin, r.xmax - r.xmin, r.ymax - r.ymin);
 
+                // calibration
+                Calibration calibration;
+                if(!calibration.isComplete())
+                {
+                    calibration.evaluate(cv::Mat(frame, leftRect), 0);
+                    calibration.evaluate(cv::Mat(frame, rightRect), 1);
+                }
+
                 // pupil
-                Pupil lPupil = Pupil(50);
-                Pupil rPupil = Pupil(50);
+                cout << calibration.getThreshold(0) << " " << calibration.getThreshold(1) << endl;
+                Pupil lPupil = Pupil(calibration.getThreshold(0));
+                Pupil rPupil = Pupil(calibration.getThreshold(1));
                 //cv::Mat leftEye = lPupil.preprocess(cv::Mat(frame, leftRect), 100);
                 lPupil.findPupil(cv::Mat(frame, leftRect));
                 rPupil.findPupil(cv::Mat(frame, rightRect));
