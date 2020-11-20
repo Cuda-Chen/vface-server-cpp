@@ -59,24 +59,20 @@ int main()
                 cv::Rect rightRect(r.xmin, r.ymin, r.xmax - r.xmin, r.ymax - r.ymin);
 
                 // calibration
-                Calibration lCalibration;
-                Calibration rCalibration;
-                if(!lCalibration.isComplete())
+                Calibration calibration = Calibration();
+                if(!calibration.isComplete())
                 {
-                    lCalibration.evaluate(cv::Mat(frame, leftRect), 0);
-                }
-                if(!rCalibration.isComplete())
-                {
-                    rCalibration.evaluate(cv::Mat(frame, rightRect), 1);
+                    calibration.evaluate(cv::Mat(leftTemp, leftRect), 0);
+                    calibration.evaluate(cv::Mat(rightTemp, rightRect), 1);
                 }
 
                 // pupil
-                cout << lCalibration.getThreshold(0) << " " << rCalibration.getThreshold(1) << endl;
-                Pupil lPupil = Pupil(lCalibration.getThreshold(0));
-                Pupil rPupil = Pupil(rCalibration.getThreshold(1));
+                cout << calibration.getThreshold(0) << " " << calibration.getThreshold(1) << endl;
+                Pupil lPupil = Pupil(calibration.getThreshold(0));
+                Pupil rPupil = Pupil(calibration.getThreshold(1));
                 //cv::Mat leftEye = lPupil.preprocess(cv::Mat(frame, leftRect), 100);
-                lPupil.findPupil(cv::Mat(frame, leftRect));
-                rPupil.findPupil(cv::Mat(frame, rightRect));
+                lPupil.findPupil(cv::Mat(leftTemp, leftRect));
+                rPupil.findPupil(cv::Mat(rightTemp, rightRect));
 
                 //cv::Mat leftEye = cv::Mat(frame.size(), CV_8UC1, cv::Scalar(255));
                 cv::Mat leftEye = frame.clone();
@@ -84,22 +80,22 @@ int main()
 
                 //for(int idx = 0; idx >= 0; idx = lPupil.hierarchy[idx][1])
                     //cv::drawContours(leftEye, lPupil.contours, idx, cv::Scalar(127), 1, 8, lPupil.hierarchy);
-                /*cv::rectangle(leftEye, leftRect, cv::Scalar(127));
-                cv::rectangle(leftEye, rightRect, cv::Scalar(127));
-                //cv::circle(leftEye, cv::Point(l.xcenter, l.ycenter), 2, cv::Scalar(0), -1);
+                //cv::rectangle(leftEye, leftRect, cv::Scalar(127));
+                //cv::rectangle(leftEye, rightRect, cv::Scalar(127));
+                /*//cv::circle(leftEye, cv::Point(l.xcenter, l.ycenter), 2, cv::Scalar(0), -1);
                 //cv::circle(leftEye, cv::Point(r.xcenter, r.ycenter), 2, cv::Scalar(0), -1);
                 for(int i = 0; i < 68; i++)
                 {
                     cv::circle(leftEye, cv::Point(shapes[0].part(i).x(), shapes[0].part(i).y()), 2, cv::Scalar(127), -1);
                 }*/
-                if(lPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(l.xmin + lPupil.x, l.ymin + lPupil.y), 10, cv::Scalar(255));
-                if(rPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(r.xmin + rPupil.x, r.ymin + rPupil.y), 10, cv::Scalar(255));
+                if(lPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(l.xmin + lPupil.x, l.ymin + lPupil.y), 1, cv::Scalar(255));
+                if(rPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(r.xmin + rPupil.x, r.ymin + rPupil.y), 1, cv::Scalar(255));
                 /*if(lPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(l.xmin, l.ymin), 10, cv::Scalar(255));
                 if(rPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(r.xmin, r.ymin), 10, cv::Scalar(255));*/
-                /*cv::Mat leftEye = cv::Mat(frame, leftRect);
+                /*cv::Mat leftEye = cv::Mat(cv::Mat(frame, leftRect).size(), CV_8UC1, cv::Scalar(0));
                 for(int idx = 0; idx >= 0; idx = lPupil.hierarchy[idx][0])
                     cv::drawContours(leftEye, lPupil.contours, idx, cv::Scalar(255), 1, 8, lPupil.hierarchy);*/
-                /*cv::Mat leftEye = cv::Mat(frame, rightRect);
+                /*cv::Mat leftEye = cv::Mat(cv::Mat(frame, rightRect).size(), CV_8UC1, cv::Scalar(0));
                 for(int idx = 0; idx >= 0; idx = rPupil.hierarchy[idx][0])
                     cv::drawContours(leftEye, rPupil.contours, idx, cv::Scalar(255), 1, 8, rPupil.hierarchy);*/
                 //leftEye = lPupil.findPupilFake(leftEye);

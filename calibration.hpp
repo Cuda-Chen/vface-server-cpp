@@ -38,8 +38,8 @@ public:
     {
         cv::Rect roi(5, 5, frame.cols - 5, frame.rows - 5);
         cv::Mat eyeFrame = cv::Mat(frame, roi);
-        double numPixels = eyeFrame.total();
-        double numBlackPixels = numPixels - cv::countNonZero(eyeFrame);
+        double numPixels = eyeFrame.rows * eyeFrame.cols;
+        double numBlackPixels = numPixels - (double) cv::countNonZero(eyeFrame);
         return numBlackPixels / numPixels;
     }
 
@@ -47,7 +47,7 @@ public:
     {
         std::unordered_map<int, double> thresholdCandidates;
 
-        for(int i = this->minThreshold; i <= this->maxThresnold; i += this->searchInterval)
+        for(int i = this->minThreshold; i < this->maxThresnold; i += this->searchInterval)
         {
             cv::Mat irisFrame = preprocess(eyeFrame, i);
             thresholdCandidates[i] = this->getIrisSize(irisFrame);

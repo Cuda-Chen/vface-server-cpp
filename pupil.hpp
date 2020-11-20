@@ -42,7 +42,9 @@ public:
         //std::cout << contours.size() << " ";
         std::sort(contours.begin(), contours.end(),
                   [](const std::vector<cv::Point> &a, const std::vector<cv::Point> &b)
-                  { return cv::contourArea(a, false) < cv::contourArea(b, false); }); 
+                  { return cv::contourArea(a, false) < cv::contourArea(b, false); });
+
+        //for(auto &contour : contours) cout << cv::contourArea(contour) << " ";
 
         try
         {
@@ -72,7 +74,7 @@ public:
     }
     
 private:
-    int threshold = 50;
+    int threshold;
     int erosionSize = 1;
     cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, 
                                                cv::Size(2 * erosionSize + 1, 2 * erosionSize + 1),
