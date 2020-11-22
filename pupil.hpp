@@ -42,7 +42,7 @@ public:
         //std::cout << contours.size() << " ";
         std::sort(contours.begin(), contours.end(),
                   [](const std::vector<cv::Point> &a, const std::vector<cv::Point> &b)
-                  { return cv::contourArea(a, false) < cv::contourArea(b, false); });
+                  { return cv::contourArea(a) < cv::contourArea(b); });
 
         //for(auto &contour : contours) cout << cv::contourArea(contour) << " ";
 
@@ -51,8 +51,8 @@ public:
             //cout << contours.size() - 2 << " ";
             std::vector<cv::Point> contour = contours.at(contours.size() - 2);
             cv::Moments moments = cv::moments(contour);
-            this->x = moments.m10 / moments.m00;
-            this->y = moments.m01 / moments.m00;
+            this->x = (int) (moments.m10 / moments.m00);
+            this->y = (int) (moments.m01 / moments.m00);
         }
         catch(std::out_of_range &oor)
         {

@@ -41,7 +41,7 @@ public:
         cv::Mat blackFrame = cv::Mat(frame.size(), CV_8UC1, cv::Scalar(0));
         cv::Mat mask = cv::Mat(frame.size(), CV_8UC1, cv::Scalar(255));
         cv::fillPoly(mask, temp, cv::Scalar(0, 0, 0));
-        cv::Mat eyeFrame;
+        cv::Mat eyeFrame = frame.clone();
         cv::bitwise_not(blackFrame, eyeFrame, mask=mask);
 
         // Crop the eye region

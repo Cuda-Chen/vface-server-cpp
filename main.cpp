@@ -28,8 +28,8 @@ int main()
             return 1;
         }
         // Resize to appropriate size to speed up
-        cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
-        cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
+        //cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
+        //cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
 
         frontal_face_detector detector = get_frontal_face_detector();
         shape_predictor pose_model;
@@ -57,6 +57,7 @@ int main()
                 cv::Mat rightTemp = r.analyze(frame, shapes, 1);
                 cv::Rect leftRect(l.xmin, l.ymin, l.xmax - l.xmin, l.ymax - l.ymin);
                 cv::Rect rightRect(r.xmin, r.ymin, r.xmax - r.xmin, r.ymax - r.ymin);
+                //imshow("left eye", cv::Mat(leftTemp, leftRect));
 
                 // calibration
                 Calibration calibration = Calibration();
@@ -67,7 +68,7 @@ int main()
                 }
 
                 // pupil
-                cout << calibration.getThreshold(0) << " " << calibration.getThreshold(1) << endl;
+                //cout << calibration.getThreshold(0) << " " << calibration.getThreshold(1) << endl;
                 Pupil lPupil = Pupil(calibration.getThreshold(0));
                 Pupil rPupil = Pupil(calibration.getThreshold(1));
                 //cv::Mat leftEye = lPupil.preprocess(cv::Mat(frame, leftRect), 100);
@@ -90,6 +91,7 @@ int main()
                 }*/
                 if(lPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(l.xmin + lPupil.x, l.ymin + lPupil.y), 1, cv::Scalar(255));
                 if(rPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(r.xmin + rPupil.x, r.ymin + rPupil.y), 1, cv::Scalar(255));
+                //cout << l.xmin + lPupil.x << " " << l.ymin + lPupil.y << " " << r.xmin + rPupil.x << " " << r.ymin + rPupil.y << endl;
                 /*if(lPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(l.xmin, l.ymin), 10, cv::Scalar(255));
                 if(rPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(r.xmin, r.ymin), 10, cv::Scalar(255));*/
                 /*cv::Mat leftEye = cv::Mat(cv::Mat(frame, leftRect).size(), CV_8UC1, cv::Scalar(0));
