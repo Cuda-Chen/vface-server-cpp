@@ -57,7 +57,6 @@ int main()
                 cv::Mat rightTemp = r.analyze(frame, shapes, 1);
                 cv::Rect leftRect(l.xmin, l.ymin, l.xmax - l.xmin, l.ymax - l.ymin);
                 cv::Rect rightRect(r.xmin, r.ymin, r.xmax - r.xmin, r.ymax - r.ymin);
-                //imshow("left eye", cv::Mat(leftTemp, leftRect));
 
                 // calibration
                 Calibration calibration = Calibration();
@@ -68,46 +67,24 @@ int main()
                 }
 
                 // pupil
-                //cout << calibration.getThreshold(0) << " " << calibration.getThreshold(1) << endl;
+
                 Pupil lPupil = Pupil(calibration.getThreshold(0));
                 Pupil rPupil = Pupil(calibration.getThreshold(1));
-                //cv::Mat leftEye = lPupil.preprocess(cv::Mat(frame, leftRect), 100);
+
                 lPupil.findPupil(cv::Mat(leftTemp, leftRect));
                 rPupil.findPupil(cv::Mat(rightTemp, rightRect));
 
-                //cv::Mat leftEye = cv::Mat(frame.size(), CV_8UC1, cv::Scalar(255));
-                cv::Mat leftEye = frame.clone();
-                //cv::bitwise_and(leftEye, rightEye, leftEye, cv::Mat(frame.size(), CV_8UC1, cv::Scalar(255)));
 
-                //for(int idx = 0; idx >= 0; idx = lPupil.hierarchy[idx][1])
-                    //cv::drawContours(leftEye, lPupil.contours, idx, cv::Scalar(127), 1, 8, lPupil.hierarchy);
-                //cv::rectangle(leftEye, leftRect, cv::Scalar(127));
-                //cv::rectangle(leftEye, rightRect, cv::Scalar(127));
-                /*//cv::circle(leftEye, cv::Point(l.xcenter, l.ycenter), 2, cv::Scalar(0), -1);
-                //cv::circle(leftEye, cv::Point(r.xcenter, r.ycenter), 2, cv::Scalar(0), -1);
-                for(int i = 0; i < 68; i++)
-                {
-                    cv::circle(leftEye, cv::Point(shapes[0].part(i).x(), shapes[0].part(i).y()), 2, cv::Scalar(127), -1);
-                }*/
+                cv::Mat leftEye = frame.clone(); 
                 if(lPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(l.xmin + lPupil.x, l.ymin + lPupil.y), 1, cv::Scalar(255));
                 if(rPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(r.xmin + rPupil.x, r.ymin + rPupil.y), 1, cv::Scalar(255));
-                //cout << l.xmin + lPupil.x << " " << l.ymin + lPupil.y << " " << r.xmin + rPupil.x << " " << r.ymin + rPupil.y << endl;
-                /*if(lPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(l.xmin, l.ymin), 10, cv::Scalar(255));
-                if(rPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(r.xmin, r.ymin), 10, cv::Scalar(255));*/
-                /*cv::Mat leftEye = cv::Mat(cv::Mat(frame, leftRect).size(), CV_8UC1, cv::Scalar(0));
-                for(int idx = 0; idx >= 0; idx = lPupil.hierarchy[idx][0])
-                    cv::drawContours(leftEye, lPupil.contours, idx, cv::Scalar(255), 1, 8, lPupil.hierarchy);*/
-                /*cv::Mat leftEye = cv::Mat(cv::Mat(frame, rightRect).size(), CV_8UC1, cv::Scalar(0));
-                for(int idx = 0; idx >= 0; idx = rPupil.hierarchy[idx][0])
-                    cv::drawContours(leftEye, rPupil.contours, idx, cv::Scalar(255), 1, 8, rPupil.hierarchy);*/
-                //leftEye = lPupil.findPupilFake(leftEye);
                 cv::imshow("detections", leftEye);
             }
             auto stop = high_resolution_clock::now();
 
             auto duration = duration_cast<microseconds>(stop - start);
 
-            //cout << duration.count() << " microseconds" << endl;
+            cout << duration.count() << " microseconds" << endl;
 
             if(cv::waitKey(1) == 27)
             {
