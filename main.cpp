@@ -8,6 +8,7 @@
 
 #include "eye.hpp"
 #include "pupil.hpp"
+#include "calculator.hpp"
 
 using namespace dlib;
 using namespace std;
