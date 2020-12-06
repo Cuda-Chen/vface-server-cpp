@@ -4,8 +4,14 @@
 #include <cmath>
 #include <vector>
 #include <utility>
+#include <stdexcept>
+#include <unordered_map>
+#include <string>
 
 using std::vector;
+using std::unordered_map;
+using std::string;
+using std::make_pair;
 
 typedef std::pair<int, int> point;
 
@@ -16,7 +22,7 @@ public:
         this->width = width;
     }
 
-    void update(vector<point> points)
+    void updatePoints(vector<point> points)
     {
         this->points = points;
     }
@@ -26,9 +32,14 @@ public:
         return hypot(p1.first - p2.first, p1.second - p2.second);
     }
 
-    point moddle(point &p1, point &p2)
+    point middle(point &p1, point &p2)
     {
-        return std::make_pair((p1.first + p2.first) / 2, (p1.second + p2.second) / 2);
+        return make_pair((p1.first + p2.first) / 2, (p1.second + p2.second) / 2);
+    }
+
+    double avg(vector<T> &v)
+    {
+        return accumulate(v.begin(), v.end(), 0.0) / v.size();
     }
 
     double calcAngleX()
@@ -38,6 +49,13 @@ public:
         return (t / d) * 50;
     }
 
+    double getAngleXAvg()
+    {
+        this->angleX.push_back(this->calcAngleX());
+        this->angleX.erase(this->angleX.begin());
+        return avg(this->angleX);
+    }
+
     double calcAngleY()
     {
         double t = this->distance(points[30], points[51]) - this->distance(points[28], points[30]);
@@ -45,9 +63,23 @@ public:
         return (t / d - 0.2) * 90;
     }
 
+    double getAngleYAvg()
+    {
+        this->angleY.push_back(this->calcAngleY());
+        this->angleY.erase(this->angleY.begin());
+        return avg(this->angleY);
+    }
+
     double calcAngleZ()
     {
         return atan2(points[27].first - points[33].first, points[33].second - points[27].second) * 100; 
+    }
+
+    double getAngleZAvg()
+    {
+        this->angleZ.push_back(this->calcAngleZ());
+        this->angleZ.erase(this->angleZ.begin());
+        return avg(this->angleZ);
     }
 
     double calcLeftEyeOpen()
@@ -57,6 +89,13 @@ public:
         return (t / d - 0.15) * 7;
     }
 
+    double getLeftEyemOpen()
+    {
+        this->leftEyeOpen.push_back(this->calcLeftEyeOpen());
+        this->leftEyeOpen.erase(this->leftEyeOpen.begin());
+        return avg(this->leftEyeOpen);
+    }
+
     double calcRightEyeOpen()
     {
         double t = this->distance(points[37], points[41]) + this->distance(points[38], points[40]);
@@ -64,12 +103,57 @@ public:
         return (t / d - 0.15) * 7;
     }
 
+    double getRightEyeOpen()
+    {
+        this->rightEyeOpen.push_back(this->calcRightEyeOpen());
+        this->rightEyeOpen.erase(this->rightEyeOpen.begin());
+        return avg(this->rightEyeOpen);
+    }
+
     double calcEyeBallX()
-    {//
+    {
+        try
+        {
+            double ln = this->distance(points[36], points[68]);
+            double rn = this->distance(points[42], points[69]);
+            return (-1 + ln / (ln + this->distance(points[39], points[68])) + rn / (rn + this->distance(points[45], points[69]))) * 3;
+        }
+        catch(std::out_of_range &oor)
+        {
+            return this->params["eyeBallX"].back();
+        }
+    }
+
+    double getEyeBallX()
+    {
+        this->eyeBallX.push_back(this->calcEyeBallX());
+        this->eyeBallX.erase(this->eyeBallX.begin());
+        return avg(this->eyeBallX);
     }
 
     double calcEyeBallY()
-    {//
+    {
+        try
+        {
+            point lt = this->middle(points[37], points[38]);
+            point ld = this->middle(points[40], points[41]);
+            point rt = this->middle(points[43], points[44]);
+            point rd = this->middle(points[46], points[47]);
+            double ln = this->distance(ld, points[68]);
+            double rn = this->distance(rd, points[69]);
+            return (-1.3 + ln / (ln + this->distance(lt, points[68])) + rn / (rn + this->distance(rt, points[69]))) * 3;
+        }
+        catch(std::out_of_range &oor)
+        {
+            return this->params["eyeBallY"].back();
+        }
+    }
+
+    double getEyeBallY()
+    {
+        this->eyeBallY.push_back(this->calcEyeBallY());
+        this->eyeBallY.erase(this->eyeBallY.begin());
+        return avg(this->eyeBallY);
     }
 
     double calcMouthOpenY()
@@ -77,14 +161,51 @@ public:
         return (this->distance(points[62], points[66]) / this->distance(points[33], points[66])) * 2;
     }
 
+    double getMouthOpenY()
+    {
+        this->mouthOpenY.push_back(this->mouthOpenY());
+        this->mouthOpenY.erase(this->mouthOpenY.begin());
+        return avg(this->mouthOpenY);
+    }
+
     double calcBodyAngleZ()
     {
         double t = points[2].first + points[14].first - points[33].first - this->width / 2;
         return (t / width) * 100;
     }
+
+    double getBodyAngleZ()
+    {
+        this->bodyAngleZ.push_back(this->bodyAngleZ());
+        this->bodyAngleZ.erase(this->bodyAngleZ.begin());
+        return avg(this->bodyAngleZ);
+    }
+
 private:
     vector<point> points;
+    const int queueSize = 5;
+
     double width;
+    vector<double> angleX(queueSize, 0);
+    vector<double> angleY(queueSize, 0);
+    vector<double> angleZ(queueSize, 0);
+    vector<double> leftEyeOpen(queueSize, 1);
+    vector<double> rightEyeOpen(queueSize, 1);
+    vector<double> eyeBallX(queueSize, 0);
+    vector<double> eyeBallY(queueSize, 0);
+    vector<double> mouthOpenY(queueSize, 0);
+    vector<double> bodyAngleZ(queueSize, 0);
+    unordered_map<string, vector<double>> params = {
+        {"angleX", angleX},
+        {"angleY", angleY},
+        {"angleZ", angleZ},
+        {"leftEyeOpen", leftEyeOpen},
+        {"rightEyeOpen", rightEyeOpen},
+        {"eyeBallX", eyeBallX},
+        {"eyeBallY", eyeBallY},
+        {"mouthOpenY", mouthOpenY},
+        {"bodyAngleZ", bodyAngleZ}
+    };
 };
 
 #endif
