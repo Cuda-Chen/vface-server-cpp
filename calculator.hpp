@@ -7,11 +7,13 @@
 #include <stdexcept>
 #include <unordered_map>
 #include <string>
+#include <numeric>
 
 using std::vector;
 using std::unordered_map;
 using std::string;
 using std::make_pair;
+using std::accumulate;
 
 typedef std::pair<int, int> point;
 
@@ -37,7 +39,7 @@ public:
         return make_pair((p1.first + p2.first) / 2, (p1.second + p2.second) / 2);
     }
 
-    double avg(vector<T> &v)
+    double avg(vector<double> &v)
     {
         return accumulate(v.begin(), v.end(), 0.0) / v.size();
     }
@@ -163,7 +165,7 @@ public:
 
     double getMouthOpenY()
     {
-        this->mouthOpenY.push_back(this->mouthOpenY());
+        this->mouthOpenY.push_back(this->calcMouthOpenY());
         this->mouthOpenY.erase(this->mouthOpenY.begin());
         return avg(this->mouthOpenY);
     }
@@ -176,7 +178,7 @@ public:
 
     double getBodyAngleZ()
     {
-        this->bodyAngleZ.push_back(this->bodyAngleZ());
+        this->bodyAngleZ.push_back(this->calcBodyAngleZ());
         this->bodyAngleZ.erase(this->bodyAngleZ.begin());
         return avg(this->bodyAngleZ);
     }
@@ -186,25 +188,25 @@ private:
     const int queueSize = 5;
 
     double width;
-    vector<double> angleX(queueSize, 0);
-    vector<double> angleY(queueSize, 0);
-    vector<double> angleZ(queueSize, 0);
-    vector<double> leftEyeOpen(queueSize, 1);
-    vector<double> rightEyeOpen(queueSize, 1);
-    vector<double> eyeBallX(queueSize, 0);
-    vector<double> eyeBallY(queueSize, 0);
-    vector<double> mouthOpenY(queueSize, 0);
-    vector<double> bodyAngleZ(queueSize, 0);
+    vector<double> angleX = vector<double>(this->queueSize, 0);
+    vector<double> angleY = vector<double>(this->queueSize, 0);
+    vector<double> angleZ = vector<double>(this->queueSize, 0);
+    vector<double> leftEyeOpen = vector<double>(this->queueSize, 1);
+    vector<double> rightEyeOpen = vector<double>(this->queueSize, 1);
+    vector<double> eyeBallX = vector<double>(this->queueSize, 0);
+    vector<double> eyeBallY = vector<double>(this->queueSize, 0);
+    vector<double> mouthOpenY = vector<double>(this->queueSize, 0);
+    vector<double> bodyAngleZ = vector<double>(this->queueSize, 0);
     unordered_map<string, vector<double>> params = {
-        {"angleX", angleX},
-        {"angleY", angleY},
-        {"angleZ", angleZ},
-        {"leftEyeOpen", leftEyeOpen},
-        {"rightEyeOpen", rightEyeOpen},
-        {"eyeBallX", eyeBallX},
-        {"eyeBallY", eyeBallY},
-        {"mouthOpenY", mouthOpenY},
-        {"bodyAngleZ", bodyAngleZ}
+        {"angleX", this->angleX},
+        {"angleY", this->angleY},
+        {"angleZ", this->angleZ},
+        {"leftEyeOpen", this->leftEyeOpen},
+        {"rightEyeOpen", this->rightEyeOpen},
+        {"eyeBallX", this->eyeBallX},
+        {"eyeBallY", this->eyeBallY},
+        {"mouthOpenY", this->mouthOpenY},
+        {"bodyAngleZ", this->bodyAngleZ}
     };
 };
 
