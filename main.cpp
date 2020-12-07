@@ -21,8 +21,8 @@ int main()
     try
     {
         cv::Mat frame;
-        cv::VideoCapture cap("test.mp4"); // use test video for testing
-        //cv::VideoCapture cap(0);
+        //cv::VideoCapture cap("test.mp4"); // use test video for testing
+        cv::VideoCapture cap(0);
         if(!cap.isOpened())
         {
             cerr << "Unable to connect to camera" << endl;
@@ -58,28 +58,28 @@ int main()
                 cv::Mat rightTemp = r.analyze(frame, shapes, 1);
                 cv::Rect leftRect(l.xmin, l.ymin, l.xmax - l.xmin, l.ymax - l.ymin);
                 cv::Rect rightRect(r.xmin, r.ymin, r.xmax - r.xmin, r.ymax - r.ymin);
+                cv::Mat leftEye = cv::Mat(leftTemp, leftRect);
+                cv::Mat rightEye = cv::Mat(rightTemp, rightRect);
 
                 // calibration
                 Calibration calibration = Calibration();
                 if(!calibration.isComplete())
                 {
-                    calibration.evaluate(cv::Mat(leftTemp, leftRect), 0);
-                    calibration.evaluate(cv::Mat(rightTemp, rightRect), 1);
+                    calibration.evaluate(leftEye, 0);
+                    calibration.evaluate(rightEye, 1);
                 }
 
                 // pupil
-
                 Pupil lPupil = Pupil(calibration.getThreshold(0));
                 Pupil rPupil = Pupil(calibration.getThreshold(1));
+                lPupil.findPupil(leftEye);
+                rPupil.findPupil(rightEye);
 
-                lPupil.findPupil(cv::Mat(leftTemp, leftRect));
-                rPupil.findPupil(cv::Mat(rightTemp, rightRect));
 
-
-                cv::Mat leftEye = frame.clone(); 
-                if(lPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(l.xmin + lPupil.x, l.ymin + lPupil.y), 1, cv::Scalar(255));
-                if(rPupil.pupilIsLocated()) cv::circle(leftEye, cv::Point(r.xmin + rPupil.x, r.ymin + rPupil.y), 1, cv::Scalar(255));
-                cv::imshow("detections", leftEye);
+                cv::Mat output = frame.clone(); 
+                if(lPupil.pupilIsLocated()) cv::circle(output, cv::Point(l.xmin + lPupil.x, l.ymin + lPupil.y), 1, cv::Scalar(255));
+                if(rPupil.pupilIsLocated()) cv::circle(output, cv::Point(r.xmin + rPupil.x, r.ymin + rPupil.y), 1, cv::Scalar(255));
+                cv::imshow("detections", output);
             }
             auto stop = high_resolution_clock::now();
 
