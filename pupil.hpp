@@ -33,7 +33,7 @@ public:
         return x >= 0 && y >= 0;
     }
 
-    void findPupil(cv::Mat eyeFrame)
+    void findPupil(cv::Mat &eyeFrame)
     {
         cv::Mat pupilFrame = preprocess(eyeFrame, this->threshold);
 

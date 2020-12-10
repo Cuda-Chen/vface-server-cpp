@@ -38,7 +38,7 @@ public:
         return 0;
     }
 
-    double getIrisSize(cv::Mat frame)
+    double getIrisSize(cv::Mat &frame)
     {
         cv::Rect roi(5, 5, frame.cols - 5 - 5, frame.rows - 5 - 5);
         cv::Mat eyeFrame = cv::Mat(frame, roi);
@@ -47,7 +47,7 @@ public:
         return numBlackPixels / numPixels;
     }
 
-    int tryBestThreshold(cv::Mat eyeFrame)
+    int tryBestThreshold(cv::Mat &eyeFrame)
     {
         std::unordered_map<int, double> thresholdCandidates;
 
@@ -65,7 +65,7 @@ public:
         return bestThreshold;
     }
 
-    void evaluate(cv::Mat eyeFrame, int side)
+    void evaluate(cv::Mat &eyeFrame, int side)
     {
         int threshold = tryBestThreshold(eyeFrame);
 
