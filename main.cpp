@@ -5,6 +5,8 @@
 #include <opencv2/imgproc.hpp>
 #include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/image_processing.h>
+#include <vector>
+#include <utility>
 
 #include "eye.hpp"
 #include "pupil.hpp"
@@ -29,8 +31,9 @@ int main()
             return 1;
         }
         // Resize to appropriate size to speed up
-        //cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
-        //cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
+        cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
+        cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
+        Calculator calc = Calculator(cv::CAP_PROP_FRAME_WIDTH);
 
         frontal_face_detector detector = get_frontal_face_detector();
         shape_predictor pose_model;
@@ -75,11 +78,22 @@ int main()
                 lPupil.findPupil(leftEye);
                 rPupil.findPupil(rightEye);
 
-
-                cv::Mat output = frame.clone(); 
+                // detection test
+                /*cv::Mat output = frame.clone(); 
                 if(lPupil.pupilIsLocated()) cv::circle(output, cv::Point(l.xmin + lPupil.x, l.ymin + lPupil.y), 1, cv::Scalar(255));
                 if(rPupil.pupilIsLocated()) cv::circle(output, cv::Point(r.xmin + rPupil.x, r.ymin + rPupil.y), 1, cv::Scalar(255));
-                cv::imshow("detections", output);
+                cv::imshow("detections", output);*/
+
+                std::vector<std::pair<int, int>> points;
+                for(int i = 0; i < 68; i++)
+                {
+                    std::pair<int, int> p = std::make_pair(shapes[0].part(i).x(), shapes[0].part(i).y());
+                    points.push_back(p);
+                }
+                points.push_back({l.xmin + lPupil.x, l.ymin + lPupil.y});
+                points.push_back({r.xmin + rPupil.x, r.ymin + rPupil.y});
+                calc.updatePoints(points);
+                cout << calc.getAngleXAvg() << endl;
             }
             auto stop = high_resolution_clock::now();
 
