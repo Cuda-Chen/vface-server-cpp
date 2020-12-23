@@ -7,6 +7,7 @@
 #include <dlib/image_processing.h>
 #include <vector>
 #include <utility>
+#include <thread>
 
 #include "eye.hpp"
 #include "pupil.hpp"
@@ -16,6 +17,8 @@ using namespace dlib;
 using namespace std;
 using namespace std::chrono;
 
+milliseconds delay(1); // 1 ms
+
 int main()
 {
     cout.setf(std::ios::unitbuf);
@@ -23,8 +26,8 @@ int main()
     try
     {
         cv::Mat frame;
-        cv::VideoCapture cap("test.mp4"); // use test video for testing
-        //cv::VideoCapture cap(0);
+        //cv::VideoCapture cap("test.mp4"); // use test video for testing
+        cv::VideoCapture cap(0);
         if(!cap.isOpened())
         {
             cerr << "Unable to connect to camera" << endl;
@@ -44,7 +47,7 @@ int main()
             cap >> frame;
             if(frame.empty()) break;
 
-            auto start = high_resolution_clock::now();
+            //auto start = high_resolution_clock::now();
             // Detect face as well as landmarks
             cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
             cv_image<unsigned char> cimg(frame);
@@ -94,21 +97,20 @@ int main()
                 points.push_back({r.xmin + rPupil.x, r.ymin + rPupil.y});
                 calc.updatePoints(points);
                 //cout << calc.getAngleXAvg() << endl;
-                cout << calc.getAngleXAvg() << ','
-                     << calc.getAngleYAvg() << ','
-                     << calc.getAngleZAvg() << ','
-                     << calc.getLeftEyeOpen() << ','
-                     << calc.getRightEyeOpen() << ','
-                     << calc.getEyeBallX() << ','
-                     << calc.getEyeBallY() << ','
-                     << calc.getMouthOpenY() << ','
+                cout << calc.getAngleXAvg() << endl
+                     << calc.getAngleYAvg() << endl
+                     << calc.getAngleZAvg() << endl 
+                     << calc.getLeftEyeOpen() << endl
+                     << calc.getRightEyeOpen() << endl
+                     << calc.getEyeBallX() << endl
+                     << calc.getEyeBallY() << endl
+                     << calc.getMouthOpenY() << endl
                      << calc.getBodyAngleZ() << endl;
             }
-            auto stop = high_resolution_clock::now();
-
+            /*auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
-
-            cout << duration.count() << " microseconds" << endl;
+            cout << duration.count() << " microseconds" << endl;*/
+            std::this_thread::sleep_for(delay);
 
             if(cv::waitKey(1) == 27)
             {
