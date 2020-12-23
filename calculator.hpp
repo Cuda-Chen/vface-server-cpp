@@ -91,7 +91,7 @@ public:
         return (t / d - 0.15) * 7;
     }
 
-    double getLeftEyemOpen()
+    double getLeftEyeOpen()
     {
         this->leftEyeOpen.push_back(this->calcLeftEyeOpen());
         this->leftEyeOpen.erase(this->leftEyeOpen.begin());

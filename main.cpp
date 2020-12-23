@@ -23,8 +23,8 @@ int main()
     try
     {
         cv::Mat frame;
-        //cv::VideoCapture cap("test.mp4"); // use test video for testing
-        cv::VideoCapture cap(0);
+        cv::VideoCapture cap("test.mp4"); // use test video for testing
+        //cv::VideoCapture cap(0);
         if(!cap.isOpened())
         {
             cerr << "Unable to connect to camera" << endl;
@@ -93,7 +93,16 @@ int main()
                 points.push_back({l.xmin + lPupil.x, l.ymin + lPupil.y});
                 points.push_back({r.xmin + rPupil.x, r.ymin + rPupil.y});
                 calc.updatePoints(points);
-                cout << calc.getAngleXAvg() << endl;
+                //cout << calc.getAngleXAvg() << endl;
+                cout << calc.getAngleXAvg() << ','
+                     << calc.getAngleYAvg() << ','
+                     << calc.getAngleZAvg() << ','
+                     << calc.getLeftEyeOpen() << ','
+                     << calc.getRightEyeOpen() << ','
+                     << calc.getEyeBallX() << ','
+                     << calc.getEyeBallY() << ','
+                     << calc.getMouthOpenY() << ','
+                     << calc.getBodyAngleZ() << endl;
             }
             auto stop = high_resolution_clock::now();
 
