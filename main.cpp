@@ -97,15 +97,15 @@ int main()
                 points.push_back({r.xmin + rPupil.x, r.ymin + rPupil.y});
                 calc.updatePoints(points);
                 //cout << calc.getAngleXAvg() << endl;
-                cout << calc.getAngleXAvg() << endl
-                     << calc.getAngleYAvg() << endl
-                     << calc.getAngleZAvg() << endl 
-                     << calc.getLeftEyeOpen() << endl
-                     << calc.getRightEyeOpen() << endl
-                     << calc.getEyeBallX() << endl
-                     << calc.getEyeBallY() << endl
-                     << calc.getMouthOpenY() << endl
-                     << calc.getBodyAngleZ() << endl;
+                cout << "AngleX " << calc.getAngleXAvg() << endl
+                     << "AngleY " << calc.getAngleYAvg() << endl
+                     << "AngleZ " << calc.getAngleZAvg() << endl 
+                     << "EyeLOpen " << calc.getLeftEyeOpen() << endl
+                     << "EyeROpen " << calc.getRightEyeOpen() << endl
+                     << "EyeBallX " << calc.getEyeBallX() << endl
+                     << "EyeBallY " << calc.getEyeBallY() << endl
+                     << "MouthOpenY " << calc.getMouthOpenY() << endl
+                     << "BodyAngleZ " << calc.getBodyAngleZ() << endl;
             }
             /*auto stop = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(stop - start);
