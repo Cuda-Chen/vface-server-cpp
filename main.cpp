@@ -34,9 +34,11 @@ int main()
             return 1;
         }
         // Resize to appropriate size to speed up
-        cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
-        cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
-        Calculator calc = Calculator(cv::CAP_PROP_FRAME_WIDTH);
+        double w = cap.get(cv::CAP_PROP_FRAME_WIDTH);
+        double h = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
+        cap.set(cv::CAP_PROP_FRAME_WIDTH, w / 4);
+        cap.set(cv::CAP_PROP_FRAME_HEIGHT, w / 4);
+        Calculator calc = Calculator(w / 4);
 
         frontal_face_detector detector = get_frontal_face_detector();
         shape_predictor pose_model;

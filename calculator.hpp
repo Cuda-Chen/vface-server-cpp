@@ -46,8 +46,8 @@ public:
 
     double calcAngleX()
     {
-        double t = this->distance(points[2], points[33]) - this->distance(points[33], points[14]);
-        double d = this->distance(points[2], points[14]);
+        double t = this->distance(this->points[2], this->points[33]) - this->distance(this->points[33], this->points[14]);
+        double d = this->distance(this->points[2], this->points[14]);
         return (t / d) * 50;
     }
 
@@ -60,8 +60,8 @@ public:
 
     double calcAngleY()
     {
-        double t = this->distance(points[30], points[51]) - this->distance(points[28], points[30]);
-        double d = this->distance(points[28], points[51]);
+        double t = this->distance(this->points[30], this->points[51]) - this->distance(this->points[28], this->points[30]);
+        double d = this->distance(this->points[28], this->points[51]);
         return (t / d - 0.2) * 90;
     }
 
@@ -74,7 +74,7 @@ public:
 
     double calcAngleZ()
     {
-        return atan2(points[27].first - points[33].first, points[33].second - points[27].second) * 100; 
+        return atan2(this->points[27].first - this->points[33].first, this->points[33].second - this->points[27].second) * 100; 
     }
 
     double getAngleZAvg()
@@ -86,8 +86,8 @@ public:
 
     double calcLeftEyeOpen()
     {
-        double t = this->distance(points[43], points[47]) + this->distance(points[44], points[46]);
-        double d = this->distance(points[23], points[43]) + this->distance(points[24], points[44]);
+        double t = this->distance(this->points[43], this->points[47]) + this->distance(this->points[44], this->points[46]);
+        double d = this->distance(this->points[23], this->points[43]) + this->distance(this->points[24], this->points[44]);
         return (t / d - 0.15) * 7;
     }
 
@@ -100,8 +100,8 @@ public:
 
     double calcRightEyeOpen()
     {
-        double t = this->distance(points[37], points[41]) + this->distance(points[38], points[40]);
-        double d = this->distance(points[19], points[37]) + this->distance(points[20], points[38]);
+        double t = this->distance(this->points[37], this->points[41]) + this->distance(this->points[38], this->points[40]);
+        double d = this->distance(this->points[19], this->points[37]) + this->distance(this->points[20], this->points[38]);
         return (t / d - 0.15) * 7;
     }
 
@@ -116,9 +116,9 @@ public:
     {
         try
         {
-            double ln = this->distance(points[36], points[68]);
-            double rn = this->distance(points[42], points[69]);
-            return (-1 + ln / (ln + this->distance(points[39], points[68])) + rn / (rn + this->distance(points[45], points[69]))) * 3;
+            double ln = this->distance(this->points[36], this->points[68]);
+            double rn = this->distance(this->points[42], this->points[69]);
+            return (-1 + ln / (ln + this->distance(this->points[39], this->points[68])) + rn / (rn + this->distance(this->points[45], this->points[69]))) * 3;
         }
         catch(std::out_of_range &oor)
         {
@@ -137,13 +137,13 @@ public:
     {
         try
         {
-            point lt = this->middle(points[37], points[38]);
-            point ld = this->middle(points[40], points[41]);
-            point rt = this->middle(points[43], points[44]);
-            point rd = this->middle(points[46], points[47]);
-            double ln = this->distance(ld, points[68]);
-            double rn = this->distance(rd, points[69]);
-            return (-1.3 + ln / (ln + this->distance(lt, points[68])) + rn / (rn + this->distance(rt, points[69]))) * 3;
+            point lt = this->middle(this->points[37], this->points[38]);
+            point ld = this->middle(this->points[40], this->points[41]);
+            point rt = this->middle(this->points[43], this->points[44]);
+            point rd = this->middle(this->points[46], this->points[47]);
+            double ln = this->distance(ld, this->points[68]);
+            double rn = this->distance(rd, this->points[69]);
+            return (-1.3 + ln / (ln + this->distance(lt, this->points[68])) + rn / (rn + this->distance(rt, this->points[69]))) * 3;
         }
         catch(std::out_of_range &oor)
         {
@@ -160,7 +160,7 @@ public:
 
     double calcMouthOpenY()
     {
-        return (this->distance(points[62], points[66]) / this->distance(points[33], points[66])) * 2;
+        return (this->distance(this->points[62], this->points[66]) / this->distance(this->points[33], this->points[66])) * 2;
     }
 
     double getMouthOpenY()
@@ -172,8 +172,8 @@ public:
 
     double calcBodyAngleZ()
     {
-        double t = points[2].first + points[14].first - points[33].first - this->width / 2;
-        return (t / width) * 100;
+        double t = this->points[2].first + this->points[14].first - this->points[33].first - this->width / 2;
+        return (t / this->width) * 100;
     }
 
     double getBodyAngleZ()
