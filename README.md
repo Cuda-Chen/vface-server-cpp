@@ -7,6 +7,7 @@ for more detail.
 ## Dependencies
 - dlib (will be install when compiling)
 - OpenCV
+- [websocketd](https://github.com/joewalnes/websocketd) (as websocket server)
 
 ## Compile
 ### Linux and macOS
@@ -22,3 +23,14 @@ $ mkdir build && cd build && cmake .. -DUSE_AVX_INSTRUCTIONS=1 && make
 
 ### Windows
 I have not tested on Windows, so PR about this part is welcome :)
+
+## Usage
+```
+$ websocketd --port=5566 ./vface_server_cpp
+```
+
+Then run [vface-web](https://github.com/c910335/vface-web).
+
+## TO-DO
+- [ ] use other C++ websocket libraries
+- [ ] refactor the code
