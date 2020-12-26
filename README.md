@@ -34,3 +34,7 @@ Then run [vface-web](https://github.com/c910335/vface-web).
 ## TO-DO
 - [ ] use other C++ websocket libraries
 - [ ] refactor the code
+
+## Special Thanks
+The source code of tracker is adopted from [GazeTracking](https://github.com/antoinelame/GazeTracking)
+and rewritten in C++.
